@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Rubik:wght@400;500;600&family=Shadows+Into+Light&family=Work+Sans:ital,wght@0,300;0,400;1,400&display=swap");
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #05101c;
+  font-family: sans-serif, serif;
+  color: white;
+}
+
+.MuiOutlinedInput-input-root.Mui-focused,
+.MuiOutlinedInput-notchedOutline {
+  border-color: white !important;
+}
