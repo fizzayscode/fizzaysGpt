@@ -8,6 +8,7 @@ import { IoIosLogIn, IoMdLogIn } from "react-icons/io";
 
 const Signup = () => {
   const Navigate = useNavigate();
+  const { error, setError } = useAuth();
   const [signUpData, setSignUpData] = useState({
     email: "",
     name: "",
@@ -16,7 +17,7 @@ const Signup = () => {
   const auth = useAuth();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(auth.user);
+    // console.log(auth.user);
     // toast.loading("signing in", { id: "login" });
     // await auth?.login(loginData.email, loginData.password);
     // toast.success("signed in successfully", { id: "login" });
@@ -24,17 +25,26 @@ const Signup = () => {
     // Navigate("/chats");
     try {
       toast.loading("signing Up User", { id: "SignUp" });
+      console.log(
+        "email:" +
+          signUpData.email +
+          "name:" +
+          signUpData.name +
+          "password:" +
+          signUpData.password
+      );
       await auth?.signup(
         signUpData.email,
         signUpData.name,
         signUpData.password
       );
+
       toast.success("signed Up successfully", { id: "SignUp" });
-      console.log(auth.user);
+      console.log("===================>" + auth.user.name);
       Navigate("/chats");
     } catch (e) {
       console.log(e);
-      toast.error("sign Up failed try again", { id: "SignUp" });
+      toast.error(e.response.data.message, { id: "SignUp" });
     }
   };
   return (

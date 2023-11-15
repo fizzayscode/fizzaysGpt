@@ -2,7 +2,6 @@ import api from "../api/users";
 
 export const loginUser = async (email, password) => {
   const response = await api.post("/users/login", { email, password });
-  console.log(response);
   if (response.status !== 200) {
     throw new Error("Unable to login ");
   }
@@ -12,8 +11,9 @@ export const loginUser = async (email, password) => {
 };
 export const signUpUser = async (email, name, password) => {
   const response = await api.post("/users/signup", { email, name, password });
-  console.log(response);
+  // console.log(response);
   if (response.status !== 201) {
+    console.log(response.data);
     throw new Error("Unable to login ");
   }
   const data = response.data;

@@ -3,6 +3,7 @@ const appRouter = require("./routes/index");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const errorHandlerMiddleWare = require("./middleware/errorHandler");
 // const { cookie } = require("express-validator");
 require("dotenv").config();
 
@@ -26,6 +27,8 @@ app.use(cors(corsOptions));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(morgan("dev"));
 app.use("/api/v1", appRouter);
+// override the normal express handler
+app.use(errorHandlerMiddleWare);
 
 const PORT = process.env.PORT || 8080;
 // console.log(process.env.PORT);

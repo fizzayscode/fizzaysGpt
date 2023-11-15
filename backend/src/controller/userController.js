@@ -4,9 +4,10 @@ const {
   checkPassword,
   generateSignature,
 } = require("../utility/passwordUtility");
+const errorHandler = require("../utility/customErrorHandler");
 const prisma = new PrismaClient();
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res, next) => {
   try {
     const users = await prisma.user.findMany();
     console.log(users);
@@ -16,11 +17,11 @@ const getAllUsers = async (req, res) => {
     return res.json(200).json({ message: "OK", users: "no users " });
   } catch (e) {
     console.log(e);
-    return res.status(404).json({ error: "something went wrong" });
+    next(e);
   }
 };
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   const { email, name, password } = req.body;
 
   if (
@@ -31,13 +32,13 @@ const createUser = async (req, res) => {
     name.trim() == "" ||
     password.trim() == ""
   ) {
-    return res.status(404).send("provide name email and password");
+    next(errorHandler(404, "provide name email and password"));
   }
   const exisitingUser = await prisma.user.findUnique({
     where: { email: email },
   });
   if (exisitingUser) {
-    return res.status(400).send("user with email already exists");
+    next(errorHandler(400, "user with email already exists"));
   }
   try {
     const encryptedPassword = await encryptPassword(password);
@@ -76,21 +77,21 @@ const createUser = async (req, res) => {
       .json({ message: "USER CREATED", name: user.name, email: user.email });
   } catch (e) {
     console.log(e);
-    return res.status(500).send("soemthing went wrong couldnt create user");
+    next(e);
   }
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password || password.trim() == "" || email.trim == "") {
-    return res.status(404).send("you must provide email or password");
+    next(errorHandler(404, "you must provide email or password"));
   }
 
   const user = await prisma.user.findUnique({ where: { email: email } });
   if (!user) {
-    return res
-      .status(404)
-      .send("wrong email or password please check and try again");
+    return next(
+      errorHandler(404, "wrong email or password please check and try again")
+    );
   }
 
   const correctPassword = await checkPassword(password, user.password);
@@ -129,7 +130,9 @@ const loginUser = async (req, res) => {
       email: user.email,
     });
   } else {
-    return res.status(404).send("email or password was wrong try again ");
+    next(
+      errorHandler(404, "wrong email or password please check and try again")
+    );
   }
 };
 

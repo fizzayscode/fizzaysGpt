@@ -24,8 +24,9 @@ const Login = () => {
       console.log(auth?.user?.name);
       Navigate("/chats");
     } catch (e) {
-      console.log(e);
-      toast.error("sign in failed try again", { id: "login" });
+      console.log("here=======================================>" + e.message);
+      toast.error(e.response.data.message, { id: "login" });
+      // auth.setError("");
     }
   };
 

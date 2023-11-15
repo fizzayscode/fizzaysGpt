@@ -24,7 +24,9 @@ const ChatItem = ({ message, role }) => {
           >
             <Avatar sx={{ ml: 0, bgcolor: "black", color: "white" }}>
               {auth?.user?.name[0]}
-              {auth?.user?.name?.split(" ")[1][0]}
+              {auth?.user?.name?.split(" ").length == 2
+                ? auth?.user?.name.split(" ")[1][0]
+                : ""}
             </Avatar>
             <Box>
               <Typography fontSize={"16px"}>{message}</Typography>
